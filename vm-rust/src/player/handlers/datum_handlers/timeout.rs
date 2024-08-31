@@ -4,7 +4,7 @@ pub struct TimeoutDatumHandlers {}
 
 impl TimeoutDatumHandlers {
   #[allow(dead_code, unused_variables)]
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "new" => Self::new(datum, args),
       "forget" => Self::forget(datum, args),
@@ -12,7 +12,7 @@ impl TimeoutDatumHandlers {
     }
   }
 
-  pub fn new(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn new(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let timeout_period = player.get_datum(&args[0]).int_value()?;
       let timeout_handler = player.get_datum(&args[1]).string_value()?;
@@ -36,7 +36,7 @@ impl TimeoutDatumHandlers {
     })
   }
 
-  fn forget(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn forget(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let timeout_name = {
         let timeout_ref = player.get_datum(datum);

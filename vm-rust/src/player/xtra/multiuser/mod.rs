@@ -27,7 +27,7 @@ impl MultiuserXtraInstance {
         if let Some((handler_obj_ref, handler_symbol)) = &self.net_message_handler {
             let handler_symbol = handler_symbol.clone();
             let handler_obj_ref = handler_obj_ref.clone();
-            player_dispatch_callback_event(handler_obj_ref, &handler_symbol, &vec![]);
+            player_dispatch_callback_event(handler_obj_ref, &handler_symbol, &[]);
         }
     }
 
@@ -50,7 +50,7 @@ pub struct MultiuserXtraManager {
 }
 
 impl MultiuserXtraManager {
-    pub fn create_instance(&mut self, _: &Vec<DatumRef>) -> u32 {
+    pub fn create_instance(&mut self, _: &[DatumRef]) -> u32 {
         self.instance_counter += 1;
         self.instances
             .insert(self.instance_counter, MultiuserXtraInstance {
@@ -68,7 +68,7 @@ impl MultiuserXtraManager {
     pub async fn call_instance_async_handler(
         handler_name: &String,
         instance_id: u32,
-        _args: &Vec<DatumRef>,
+        _args: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         Err(ScriptError::new(format!(
             "No async handler {} found for Multiuser xtra instance #{}",
@@ -79,7 +79,7 @@ impl MultiuserXtraManager {
     pub fn call_instance_handler(
         handler_name: &String,
         instance_id: u32,
-        args: &Vec<DatumRef>,
+        args: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         match handler_name.as_str() {
             "setNetBufferLimits" => Ok(DatumRef::Void),

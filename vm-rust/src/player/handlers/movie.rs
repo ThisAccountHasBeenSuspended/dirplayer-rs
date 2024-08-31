@@ -3,14 +3,14 @@ use crate::{director::lingo::datum::Datum, player::{cast_lib::INVALID_CAST_MEMBE
 pub struct MovieHandlers {}
 
 impl MovieHandlers {
-  pub fn puppet_tempo(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn puppet_tempo(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       player.movie.puppet_tempo = player.get_datum(&args[0]).int_value()? as u32;
       Ok(DatumRef::Void)
     })
   }
 
-  pub fn script(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn script(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let identifier = player.get_datum(&args[0]);
       let formatted_id = format_datum(&args[0], &player);
@@ -35,7 +35,7 @@ impl MovieHandlers {
     })
   }
 
-  pub fn member(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn member(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() > 2 {
         return Err(ScriptError::new("Too many arguments for member".to_string()));
@@ -55,14 +55,14 @@ impl MovieHandlers {
     })
   }
 
-  pub fn go(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn go(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       player.next_frame = Some(player.get_datum(&args[0]).int_value()? as u32);
       Ok(DatumRef::Void)
     })
   }
 
-  pub fn puppet_sprite(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn puppet_sprite(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let sprite_number = player.get_datum(&args[0]).int_value()?;
       let is_puppet = player.get_datum(&args[1]).int_value()? == 1;
@@ -72,14 +72,14 @@ impl MovieHandlers {
     })
   }
 
-  pub fn sprite(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn sprite(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let sprite_number = player.get_datum(&args[0]).int_value()?;
       Ok(player.alloc_datum(Datum::SpriteRef(sprite_number as i16)))
     })
   }
 
-  pub async fn send_all_sprites(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub async fn send_all_sprites(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let (message, remaining_args) = reserve_player_mut(|player| {
       let message = player.get_datum(&args[0]).symbol_value().unwrap();
       let remaining_args = &args[1..].to_vec();
@@ -88,7 +88,7 @@ impl MovieHandlers {
     player_invoke_global_event(&message, &remaining_args).await
   }
 
-  pub fn external_param_value(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn external_param_value(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let key = player.get_datum(&args[0]).string_value()?;
       let value: String = player.external_params.get(&key)
@@ -98,24 +98,24 @@ impl MovieHandlers {
     })
   }
 
-  pub fn stop_event(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn stop_event(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     // TODO stop event
     Ok(DatumRef::Void)
   }
 
-  pub fn get_pref(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_pref(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(DatumRef::Void)
   }
 
-  pub fn set_pref(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_pref(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(DatumRef::Void)
   }
 
-  pub fn go_to_net_page(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn go_to_net_page(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(DatumRef::Void)
   }
 
-  pub fn pass(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn pass(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let scope_ref = player.current_scope_ref();
       let scope = player.scopes.get_mut(scope_ref).unwrap();
@@ -124,14 +124,14 @@ impl MovieHandlers {
     })
   }
 
-  pub fn update_stage(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn update_stage(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     // TODO: re-render
     // The updateStage() method redraws sprites, performs transitions, plays sounds, sends a prepareFrame message
     // (affecting movie and behavior scripts), and sends a stepFrame message (which affects actorList)
     Ok(DatumRef::Void)
   }
 
-  pub fn rollover(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn rollover(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let sprite = get_sprite_at(player, player.mouse_loc.0, player.mouse_loc.1, false);
       Ok(player.alloc_datum(Datum::Int(sprite.unwrap_or(0) as i32)))

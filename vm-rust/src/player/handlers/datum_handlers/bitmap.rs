@@ -7,7 +7,7 @@ use super::prop_list::PropListUtils;
 pub struct BitmapDatumHandlers {}
 
 impl BitmapDatumHandlers {
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "fill" => Self::fill(datum, args),
       "draw" => Self::draw(datum, args),
@@ -21,7 +21,7 @@ impl BitmapDatumHandlers {
     }
   }
 
-  pub fn get_pixel(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_pixel(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let bitmap = player.get_datum(datum).to_bitmap_ref()?;
       let bitmap = player.bitmap_manager.get_bitmap(*bitmap).unwrap();
@@ -33,7 +33,7 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn trim_whitespace(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn trim_whitespace(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let bitmap = player.get_datum(datum).to_bitmap_ref()?;
       let bitmap = player.bitmap_manager.get_bitmap_mut(*bitmap).unwrap();
@@ -42,7 +42,7 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn create_matte(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn create_matte(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       // TODO alpha threshold
       if args.len() != 0 {
@@ -56,11 +56,11 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn duplicate(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn duplicate(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(player_duplicate_datum(datum))
   }
 
-  pub fn draw(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn draw(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let bitmap = player.get_datum(datum);
       let bitmap_ref = match bitmap {
@@ -101,7 +101,7 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn set_pixel(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_pixel(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let bitmap = player.get_datum(datum);
       let bitmap_ref = match bitmap {
@@ -138,7 +138,7 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn fill(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn fill(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let bitmap = player.get_datum(datum);
       let (rect, color_ref) = if args.len() == 2 {
@@ -169,7 +169,7 @@ impl BitmapDatumHandlers {
     })
   }
 
-  pub fn copy_pixels(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn copy_pixels(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let dst_bitmap_ref = player.get_datum(datum).to_bitmap_ref()?;
       let src_bitmap_ref = player.get_datum(&args[0]);

@@ -706,8 +706,8 @@ fn read_chunk_data(reader: &mut BinaryReader, fourcc: u32, len: u32) -> Result<V
   return Ok(reader.read_bytes(use_len as usize).unwrap().to_vec());
 }
 
-pub fn read_director_file_bytes(bytes: &Vec<u8>, file_name: &str, base_path: &str) -> Result<DirectorFile, String> {
-  let mut reader = binary_reader::BinaryReader::from_vec(bytes);
+pub fn read_director_file_bytes(bytes: &[u8], file_name: &str, base_path: &str) -> Result<DirectorFile, String> {
+  let mut reader = binary_reader::BinaryReader::from_u8(bytes);
   let mut chunk_container = ChunkContainer {
     cached_chunk_views: HashMap::new(),
     chunk_info: HashMap::new(),

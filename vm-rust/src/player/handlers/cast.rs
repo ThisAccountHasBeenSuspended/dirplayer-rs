@@ -4,7 +4,7 @@ use crate::{director::lingo::datum::Datum, player::{reserve_player_mut, DatumRef
 pub struct CastHandlers { }
 
 impl CastHandlers {
-  pub fn cast_lib(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn cast_lib(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let name_or_number = player.get_datum(&args[0]);
       let cast = match name_or_number {

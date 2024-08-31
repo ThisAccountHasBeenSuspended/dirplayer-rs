@@ -8,7 +8,7 @@ use super::{cast::CastHandlers, datum_handlers::{player_call_datum_handler, scri
 pub struct BuiltInHandlerManager { }
 
 impl BuiltInHandlerManager {
-  fn param(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn param(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_ref(|player| {
       let param_number = player.get_datum(&args[0]).int_value()?;
       let scope_ref = player.current_scope_ref();
@@ -17,7 +17,7 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn count(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn count(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       match obj {
@@ -28,7 +28,7 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn get_at(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn get_at(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_ref(|player| {
       let obj = player.get_datum(&args[0]);
       let position = player.get_datum(&args[1]).int_value()?;
@@ -41,7 +41,7 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn put(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn put(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_ref(|player| {
       let mut line = String::new();
       let mut i = 0;
@@ -59,14 +59,14 @@ impl BuiltInHandlerManager {
     Ok(DatumRef::Void)
   }
 
-  fn clear_globals(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn clear_globals(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       player.globals.clear();
       Ok(DatumRef::Void)
     })
   }
 
-  fn random(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn random(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let min: i32 = 1;
       let max = player.get_datum(&args[0]).int_value()? - 1;
@@ -81,7 +81,7 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn bit_and(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn bit_and(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let a = player.get_datum(&args[0]).int_value()?;
       let b = player.get_datum(&args[1]).int_value()?;
@@ -89,7 +89,7 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn bit_or(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn bit_or(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let a = player.get_datum(&args[0]).int_value()?;
       let b = player.get_datum(&args[1]).int_value()?;
@@ -97,14 +97,14 @@ impl BuiltInHandlerManager {
     })
   }
 
-  fn bit_not(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn bit_not(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let a = player.get_datum(&args[0]).int_value()?;
       Ok(player.alloc_datum(Datum::Int(!a)))
     })
   }
 
-  async fn call(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  async fn call(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let receiver_ref = &args[1];
     let (handler_name, args, instance_ids) = reserve_player_mut(|player| {
       let handler_name = player.get_datum(&args[0]);
@@ -163,7 +163,7 @@ impl BuiltInHandlerManager {
     }
   }
 
-  pub async fn call_async_handler(name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub async fn call_async_handler(name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match name.as_str() {
       "call" => Self::call(args).await,
       "new" => TypeHandlers::new(args).await,
@@ -176,7 +176,7 @@ impl BuiltInHandlerManager {
     }
   }
 
-  pub fn call_handler(name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call_handler(name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match name.as_str() {
       "castLib" => CastHandlers::cast_lib(args),
       "preloadNetThing" => NetHandlers::preload_net_thing(args),

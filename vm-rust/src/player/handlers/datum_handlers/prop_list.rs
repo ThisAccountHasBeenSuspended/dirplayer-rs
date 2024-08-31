@@ -5,7 +5,7 @@ pub struct PropListDatumHandlers {}
 pub struct PropListUtils {}
 
 impl PropListUtils {
-  fn find_index_to_add(prop_list: &Vec<PropListPair>, item: (&DatumRef, &DatumRef), allocator: &DatumAllocator) -> Result<i32, ScriptError> {
+  fn find_index_to_add(prop_list: &[PropListPair], item: (&DatumRef, &DatumRef), allocator: &DatumAllocator) -> Result<i32, ScriptError> {
     let mut low = 0;
     let mut high = prop_list.len() as i32;
     let key = allocator.get_datum(item.0);
@@ -23,7 +23,7 @@ impl PropListUtils {
     Ok(low)
   }
 
-  fn get_key_index(prop_list: &Vec<PropListPair>, key: &Datum, allocator: &DatumAllocator) -> Result<i32, ScriptError> {
+  fn get_key_index(prop_list: &[PropListPair], key: &Datum, allocator: &DatumAllocator) -> Result<i32, ScriptError> {
     let mut pos = -1;
     for (i, (k, _)) in prop_list.iter().enumerate() {
       let k_datum = allocator.get_datum(k);
@@ -40,7 +40,7 @@ impl PropListUtils {
 
   pub fn get_prop_or_built_in(
     player: &mut DirPlayer,
-    prop_list: &Vec<PropListPair>, 
+    prop_list: &[PropListPair], 
     key: &String,
   ) -> Result<DatumRef, ScriptError> {
     let key_index = Self::get_key_index(prop_list, &Datum::String(key.to_owned()), &player.allocator)?;
@@ -55,7 +55,7 @@ impl PropListUtils {
   }
 
   pub fn get_built_in_prop(
-    prop_list: &Vec<PropListPair>,
+    prop_list: &[PropListPair],
     prop: &String,
   ) -> Result<Datum, ScriptError> {
     match prop.as_str() {
@@ -68,7 +68,7 @@ impl PropListUtils {
   }
 
   pub fn get_prop(
-    prop_list: &Vec<PropListPair>, 
+    prop_list: &[PropListPair], 
     key_ref: &DatumRef, 
     allocator: &DatumAllocator,
     is_required: bool,
@@ -121,7 +121,7 @@ impl PropListUtils {
   }
 
   pub fn get_at(
-    prop_list: &Vec<PropListPair>, 
+    prop_list: &[PropListPair], 
     key_ref: &DatumRef, 
     allocator: &DatumAllocator,
   ) -> Result<DatumRef, ScriptError> {
@@ -143,7 +143,7 @@ impl PropListUtils {
   }
 
   pub fn get_by_key(
-    prop_list: &Vec<PropListPair>, 
+    prop_list: &[PropListPair], 
     key_ref: &DatumRef, 
     allocator: &DatumAllocator,
   ) -> Result<DatumRef, ScriptError> {
@@ -152,7 +152,7 @@ impl PropListUtils {
   }
 
   pub fn get_by_concrete_key(
-    prop_list: &Vec<PropListPair>, 
+    prop_list: &[PropListPair], 
     key: &Datum, 
     allocator: &DatumAllocator,
   ) -> Result<DatumRef, ScriptError> {
@@ -191,7 +191,7 @@ impl PropListUtils {
 }
 
 impl PropListDatumHandlers {
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "getAt" => Self::get_at(datum, args),
       "setAt" => Self::set_at(datum, args),
@@ -214,7 +214,7 @@ impl PropListDatumHandlers {
     }
   }
 
-  fn count(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn count(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_list = player.get_datum(datum).to_map()?;
       let count = if args.is_empty() {
@@ -235,7 +235,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn get_one(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_one(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let find = player.get_datum(&args[0]);
       let prop_list = player.get_datum(datum);
@@ -253,7 +253,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn find_pos(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn find_pos(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let find = player.get_datum(&args[0]);
       let prop_list = player.get_datum(datum);
@@ -275,7 +275,7 @@ impl PropListDatumHandlers {
   }
 
   // Finds position of value
-  pub fn get_pos(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_pos(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let find = player.get_datum(&args[0]);
       let prop_list = player.get_datum(datum).to_map()?;
@@ -289,7 +289,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn get_last(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_last(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_list = player.get_datum(datum);
       let prop_list = match prop_list {
@@ -301,11 +301,11 @@ impl PropListDatumHandlers {
     })
   }
 
-  fn duplicate(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn duplicate(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(player_duplicate_datum(datum))
   }
 
-  pub fn get_a_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_a_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let key = player.get_datum(&args[0]);
       let prop_list = player.get_datum(datum);
@@ -323,7 +323,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  fn get_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn get_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let base_prop_ref = reserve_player_mut(|player| {
       let key = player.get_datum(&args[0]);
       let prop_list = player.get_datum(datum).to_map()?;
@@ -347,7 +347,7 @@ impl PropListDatumHandlers {
     }
   }
 
-  fn set_opt_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn set_opt_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let formatted_key = format_datum(&args[0], &player);
       let prop_list = player.get_datum(datum);
@@ -363,7 +363,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  fn add_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn add_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {      
       let prop_name_ref = &args[0];
       let value_ref = &args[1];
@@ -386,7 +386,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  fn set_required_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn set_required_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let formatted_key = format_datum(&args[0], &player);
       let prop_list = player.get_datum(datum);
@@ -402,7 +402,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn set_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let formatted_key = format_datum(&args[0], &player);
       let prop_list = player.get_datum(datum);
@@ -418,7 +418,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn get_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_list = player.get_datum(datum);
       let prop_list = match prop_list {
@@ -430,7 +430,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn delete_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn delete_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let position = player.get_datum(&args[0]).int_value()?;
       let prop_list = player.get_datum_mut(datum);
@@ -445,7 +445,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn get_prop_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_prop_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_list = player.get_datum(datum);
       let prop_list = match prop_list {
@@ -457,7 +457,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn sort(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn sort(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let sorted_prop_list = reserve_player_ref(|player| {
       let mut sorted_prop_list = player.get_datum(datum).to_map()?.clone();
       sorted_prop_list.sort_by(|a, b| {
@@ -488,7 +488,7 @@ impl PropListDatumHandlers {
     })
   }
 
-  pub fn delete_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn delete_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_name = player.get_datum(&args[0]);
       if prop_name.is_string() || prop_name.is_symbol() {

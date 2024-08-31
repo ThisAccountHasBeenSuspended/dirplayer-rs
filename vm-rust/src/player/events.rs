@@ -17,7 +17,7 @@ pub enum PlayerVMEvent {
     Callback(DatumRef, String, Vec<DatumRef>),
 }
 
-pub fn player_dispatch_global_event(handler_name: &String, args: &Vec<DatumRef>) {
+pub fn player_dispatch_global_event(handler_name: &String, args: &[DatumRef]) {
     let tx = unsafe { PLAYER_EVENT_TX.clone() }.unwrap();
     tx.try_send(PlayerVMEvent::Global(
         handler_name.to_owned(),
@@ -26,7 +26,7 @@ pub fn player_dispatch_global_event(handler_name: &String, args: &Vec<DatumRef>)
     .unwrap();
 }
 
-pub fn player_dispatch_callback_event(receiver: DatumRef, handler_name: &String, args: &Vec<DatumRef>) {
+pub fn player_dispatch_callback_event(receiver: DatumRef, handler_name: &String, args: &[DatumRef]) {
     let tx = unsafe { PLAYER_EVENT_TX.clone() }.unwrap();
     tx.try_send(PlayerVMEvent::Callback(
         receiver,
@@ -38,7 +38,7 @@ pub fn player_dispatch_callback_event(receiver: DatumRef, handler_name: &String,
 
 pub fn player_dispatch_targeted_event(
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
     instance_ids: Option<&Vec<ScriptInstanceRef>>,
 ) {
     let tx = unsafe { PLAYER_EVENT_TX.clone() }.unwrap();
@@ -52,7 +52,7 @@ pub fn player_dispatch_targeted_event(
 
 pub fn player_dispatch_event_to_sprite(
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
     sprite_num: u16,
 ) {
     let instance_ids = reserve_player_ref(|player| {
@@ -79,8 +79,8 @@ pub fn player_dispatch_event_to_sprite(
 
 pub async fn player_invoke_event_to_instances(
     handler_name: &String,
-    args: &Vec<DatumRef>,
-    instance_refs: &Vec<ScriptInstanceRef>,
+    args: &[DatumRef],
+    instance_refs: &[ScriptInstanceRef],
 ) -> Result<bool, ScriptError> {
     let recv_instance_handlers = reserve_player_ref(|player| {
         // let receiver_refs = get_active_scripts(&player.movie, &player.get_hydrated_globals());
@@ -107,7 +107,7 @@ pub async fn player_invoke_event_to_instances(
 
 async fn player_invoke_static_event(
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
 ) -> Result<bool, ScriptError> {
     let active_static_scripts = reserve_player_mut(|player| {
         let frame_script = player
@@ -156,7 +156,7 @@ async fn player_invoke_static_event(
 
 async fn player_invoke_targeted_event(
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
     instance_refs: Option<&Vec<ScriptInstanceRef>>,
 ) -> Result<DatumRef, ScriptError> {
     let handled = match instance_refs {
@@ -173,7 +173,7 @@ async fn player_invoke_targeted_event(
 
 pub async fn player_invoke_global_event(
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
 ) -> Result<DatumRef, ScriptError> {
     // First stage behavior script
     // Then frame behavior script

@@ -215,7 +215,7 @@ impl StringChunkUtils {
 }
 
 impl StringChunkHandlers {
-  pub fn count(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn count(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(datum).string_value()?;
       let operand = player.get_datum(&args[0]).string_value()?;
@@ -225,7 +225,7 @@ impl StringChunkHandlers {
     })
   }
 
-  pub fn get_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let datum = player.get_datum(datum);
       let prop_name = player.get_datum(&args[0]).string_value()?;
@@ -255,7 +255,7 @@ impl StringChunkHandlers {
     Ok(())
   }
 
-  fn delete(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn delete(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let (original_str_ref, chunk_expr, ..) = player.get_datum(datum).to_string_chunk()?;
       StringChunkUtils::delete(player, &original_str_ref.clone(), &chunk_expr.clone())?;
@@ -263,7 +263,7 @@ impl StringChunkHandlers {
     })
   }
 
-  fn set_contents(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn set_contents(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let (original_str_ref, chunk_expr, ..) = player.get_datum(datum).to_string_chunk()?;
       let new_str = player.get_datum(&args[0]).string_value()?;
@@ -272,7 +272,7 @@ impl StringChunkHandlers {
     })
   }
 
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "count" => Self::count(datum, args),
       "getProp" => Self::get_prop(datum, args),

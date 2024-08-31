@@ -51,7 +51,7 @@ impl SpriteDatumHandlers {
     pub fn call(
         _: &DatumRef,
         handler_name: &String,
-        _: &Vec<DatumRef>,
+        _: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         match handler_name.as_str() {
             _ => Err(ScriptError::new_code(ScriptErrorCode::HandlerNotFound, format!(
@@ -63,7 +63,7 @@ impl SpriteDatumHandlers {
     pub async fn call_async(
         datum: DatumRef,
         handler_name: &String,
-        args: &Vec<DatumRef>,
+        args: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         let instance_refs =
             reserve_player_ref(|player| SpriteDatumUtils::get_script_instance_ids(&datum, player))?;

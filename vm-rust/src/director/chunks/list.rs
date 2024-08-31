@@ -32,7 +32,7 @@ impl BasicListChunk {
   }
 
   #[allow(unused_variables)]
-  pub fn read_items(reader: &mut BinaryReader, dir_version: u16, header: usize, offset_table: &Vec<usize>) -> Result<Vec<Vec<u8>>, String> {
+  pub fn read_items(reader: &mut BinaryReader, dir_version: u16, header: usize, offset_table: &[usize]) -> Result<Vec<Vec<u8>>, String> {
     let items_len = reader.read_u32().unwrap();
 
     let item_endian = reader.endian;

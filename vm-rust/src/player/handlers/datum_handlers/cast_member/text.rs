@@ -8,7 +8,7 @@ use crate::{
 pub struct TextMemberHandlers {}
 
 impl TextMemberHandlers {
-    pub fn call(player: &mut DirPlayer, datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+    pub fn call(player: &mut DirPlayer, datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
         let member_ref = player.get_datum(datum).to_member_ref()?;
         let member = player.movie.cast_manager.find_member_by_ref(&member_ref).unwrap();
         let text = member.member_type.as_text().unwrap();

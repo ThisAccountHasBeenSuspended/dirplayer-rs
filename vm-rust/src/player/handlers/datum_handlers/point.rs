@@ -4,7 +4,7 @@ pub struct PointDatumHandlers {}
 
 impl PointDatumHandlers {
   #[allow(dead_code, unused_variables)]
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "getAt" => Self::get_at(datum, args),
       "setAt" => Self::set_at(datum, args),
@@ -13,7 +13,7 @@ impl PointDatumHandlers {
     }
   }
 
-  pub fn inside(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn inside(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let point = player.get_datum(datum).to_int_point()?;
       let rect = player.get_datum(&args[0]).to_int_rect()?;
@@ -21,7 +21,7 @@ impl PointDatumHandlers {
     })
   }
 
-  pub fn get_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let rect = player.get_datum(datum);
       let rect = match rect {
@@ -34,7 +34,7 @@ impl PointDatumHandlers {
     })
   }
 
-  pub fn set_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let pos = player.get_datum(&args[0]).int_value()?;
       let value = player.get_datum(&args[1]).int_value()?;

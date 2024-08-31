@@ -3,13 +3,13 @@ use crate::{director::lingo::datum::Datum, player::{datum_formatting::format_con
 pub struct StringHandlers {}
 
 impl StringHandlers {
-  pub fn space(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn space(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       Ok(player.alloc_datum(Datum::String(" ".to_string())))
     })
   }
 
-  pub fn offset(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn offset(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let str_to_find = player.get_datum(&args[0]).string_value()?;
       let find_in = player.get_datum(&args[1]).string_value()?;
@@ -18,7 +18,7 @@ impl StringHandlers {
     })
   }
 
-  pub fn length(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn length(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       match obj {
@@ -32,7 +32,7 @@ impl StringHandlers {
     })
   }
 
-  pub fn string(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn string(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let result_obj = if obj.is_string() {
@@ -46,7 +46,7 @@ impl StringHandlers {
     })
   }
 
-  pub fn chars(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn chars(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let string = player.get_datum(&args[0]).string_value()?;
       let start = player.get_datum(&args[1]).int_value()? - 1;
@@ -57,7 +57,7 @@ impl StringHandlers {
     })
   }
 
-  pub fn char_to_num(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn char_to_num(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let str_value = player.get_datum(&args[0]).string_value()?;
       let num = str_value.chars().next().map(|c| c as i32).unwrap_or(0);
@@ -65,7 +65,7 @@ impl StringHandlers {
     })
   }
 
-  pub fn num_to_char(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn num_to_char(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let num = player.get_datum(&args[0]).int_value()?;
       let char_value = std::char::from_u32(num as u32).unwrap().to_string();

@@ -3,7 +3,7 @@ use binary_reader::{BinaryReader, Endian};
 use super::reader::DirectorExt;
 
 pub fn read_pascal_string(
-  item_bufs: &Vec<Vec<u8>>, 
+  item_bufs: &[Vec<u8>], 
   index: usize,
   item_endian: Endian,
 ) -> String {
@@ -22,7 +22,7 @@ pub fn read_pascal_string(
 }
 
 pub fn read_string(
-  item_bufs: &Vec<Vec<u8>>, 
+  item_bufs: &[Vec<u8>], 
   index: usize,
 ) -> String {
   if index >= item_bufs.len() {
@@ -34,7 +34,7 @@ pub fn read_string(
 }
 
 pub fn read_u16(
-  item_bufs: &Vec<Vec<u8>>, 
+  item_bufs: &[Vec<u8>], 
   index: usize,
   item_endian: Endian,
 ) -> u16 {

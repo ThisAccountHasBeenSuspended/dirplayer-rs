@@ -4,7 +4,7 @@ pub struct SoundDatumHandlers {}
 
 impl SoundDatumHandlers {
   #[allow(dead_code, unused_variables)]
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       _ => Err(ScriptError::new(format!("No handler {handler_name} for sound")))
     }

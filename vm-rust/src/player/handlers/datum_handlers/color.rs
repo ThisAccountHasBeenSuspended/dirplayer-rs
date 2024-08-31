@@ -3,7 +3,7 @@ use crate::{director::lingo::datum::Datum, player::{bitmap::bitmap::{get_system_
 pub struct ColorDatumHandlers {}
 
 impl ColorDatumHandlers {
-  pub fn call(datum: &DatumRef, handler_name: &String, _args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, _args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "hexString" => {
         reserve_player_mut(|player| {

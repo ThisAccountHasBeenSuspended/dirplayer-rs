@@ -23,7 +23,7 @@ impl RectUtils {
 
 impl RectDatumHandlers {
   #[allow(dead_code, unused_variables)]
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "getAt" => Self::get_at(datum, args),
       "setAt" => Self::set_at(datum, args),
@@ -32,7 +32,7 @@ impl RectDatumHandlers {
     }
   }
 
-  pub fn intersect(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn intersect(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let rect1 = player.get_datum(datum).to_int_rect()?;
       let rect2 = player.get_datum(&args[0]).to_int_rect()?;
@@ -41,7 +41,7 @@ impl RectDatumHandlers {
     })
   }
 
-  pub fn get_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let rect = player.get_datum(datum);
       let rect = match rect {
@@ -54,7 +54,7 @@ impl RectDatumHandlers {
     })
   }
 
-  pub fn set_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let pos = player.get_datum(&args[0]).int_value()?;
       let value = player.get_datum(&args[1]).int_value()?;

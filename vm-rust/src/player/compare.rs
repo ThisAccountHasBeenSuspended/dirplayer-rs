@@ -167,8 +167,8 @@ pub fn datum_is_zero(datum: &Datum, datums: &DatumAllocator) -> Result<bool, Scr
   })
 }
 
-pub fn sort_datums(datums: &Vec<DatumRef>, allocator: &DatumAllocator) -> Result<Vec<DatumRef>, ScriptError> {
-  let mut sorted_list = datums.clone();
+pub fn sort_datums(datums: &[DatumRef], allocator: &DatumAllocator) -> Result<Vec<DatumRef>, ScriptError> {
+  let mut sorted_list = datums.to_vec();
   sorted_list.sort_by(|a, b| {
     let left = allocator.get_datum(a);
     let right = allocator.get_datum(b);

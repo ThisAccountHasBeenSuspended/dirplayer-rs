@@ -4,7 +4,7 @@ pub struct ListDatumHandlers {}
 pub struct ListDatumUtils {}
 
 impl ListDatumUtils {
-  fn find_index_to_add(list_vec: &Vec<DatumRef>, item: &DatumRef, allocator: &DatumAllocator) -> Result<i32, ScriptError> {
+  fn find_index_to_add(list_vec: &[DatumRef], item: &DatumRef, allocator: &DatumAllocator) -> Result<i32, ScriptError> {
     let mut low = 0;
     let mut high = list_vec.len() as i32;
     let item = allocator.get_datum(item);
@@ -22,7 +22,7 @@ impl ListDatumUtils {
     Ok(low)
   }
 
-  pub fn get_prop(list_vec: &Vec<DatumRef>, prop_name: &String, _datums: &DatumAllocator) -> Result<Datum, ScriptError> {
+  pub fn get_prop(list_vec: &[DatumRef], prop_name: &String, _datums: &DatumAllocator) -> Result<Datum, ScriptError> {
     match prop_name.as_str() {
       "count" => Ok(Datum::Int(list_vec.len() as i32)),
       "ilk" => Ok(Datum::Symbol("list".to_string())),
@@ -32,7 +32,7 @@ impl ListDatumUtils {
 }
 
 impl ListDatumHandlers {
-  pub fn get_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let list_vec = player.get_datum(datum).to_list()?;
       let position = player.get_datum(&args[0]).int_value()? - 1;
@@ -44,7 +44,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn set_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let position = player.get_datum(&args[0]).int_value()?;
       let (_, list_vec, ..) = player.get_datum_mut(datum).to_list_mut()?;
@@ -65,7 +65,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "count" => Self::count(datum, args),
       "getAt" => Self::get_at(datum, args),
@@ -85,14 +85,14 @@ impl ListDatumHandlers {
     }
   }
 
-  fn count(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn count(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let list_vec = player.get_datum(datum).to_list()?;
       Ok(player.alloc_datum(Datum::Int(list_vec.len() as i32)))
     })
   }
 
-  fn get_last(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn get_last(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let list_vec = player.get_datum(datum).to_list()?;
       let last = list_vec.last().map(|x| x.clone()).unwrap_or(DatumRef::Void);
@@ -100,7 +100,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn get_one(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_one(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let find = player.get_datum(&args[0]);
       let list_vec = player.get_datum(datum).to_list()?;
@@ -110,7 +110,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn find_pos(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn find_pos(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     // TODO: why is this exactly the same as get_one?
     reserve_player_mut(|player| {
       let find = player.get_datum(&args[0]);
@@ -120,7 +120,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn add(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn add(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let item = &args[0];
     reserve_player_mut(|player| {
       let (_, list_vec, is_sorted) = player.get_datum(datum).to_list_tuple()?;
@@ -140,7 +140,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn delete_one(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn delete_one(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let index = reserve_player_ref(|player| {
       let item = player.get_datum(&args[0]);
       let list_vec = player.get_datum(datum).to_list()?;
@@ -157,7 +157,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn delete_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn delete_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let position = player.get_datum(&args[0]).int_value()?;
       let (_, list_vec, _) = player.get_datum_mut(datum).to_list_mut()?;
@@ -171,7 +171,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn add_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn add_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let position = player.get_datum(&args[0]).int_value()? - 1;
       let item_ref = &args[1];
@@ -182,7 +182,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn append(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn append(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let item = &args[0];
     reserve_player_mut(|player| {
       let (_, list_vec, _) = player.get_datum_mut(datum).to_list_mut()?;
@@ -191,7 +191,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn sort(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn sort(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let sorted_list = reserve_player_ref(|player| {
       let list_vec = player.get_datum(datum).to_list()?;
       let mut sorted_list = list_vec.clone();
@@ -221,7 +221,7 @@ impl ListDatumHandlers {
     })
   }
 
-  pub fn duplicate(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn duplicate(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(player_duplicate_datum(datum))
   }
 }

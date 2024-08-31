@@ -100,7 +100,7 @@ impl TypeUtils {
 }
 
 impl TypeHandlers {
-  pub fn objectp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn objectp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_object = match obj {
@@ -115,7 +115,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn voidp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn voidp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_void = match obj {
@@ -126,7 +126,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn listp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn listp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_list = match obj {
@@ -138,7 +138,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn symbolp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn symbolp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_symbol = match obj {
@@ -149,7 +149,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn stringp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn stringp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_string = match obj {
@@ -161,7 +161,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn integerp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn integerp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_integer = match obj {
@@ -172,7 +172,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn floatp(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn floatp(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let is_float = match obj {
@@ -183,7 +183,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn value(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn value(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let expr = player.get_datum(&args[0]);
       match expr {
@@ -193,11 +193,11 @@ impl TypeHandlers {
     })
   }
 
-  pub fn void(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn void(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(DatumRef::Void)
   }
 
-  pub fn ilk(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn ilk(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       let ilk_type = args
@@ -270,7 +270,7 @@ impl TypeHandlers {
     None
   }
 
-  pub fn integer(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn integer(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(&args[0]);
       let result = match value {
@@ -292,7 +292,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn float(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn float(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(&args[0]);
       let result = if value.is_number() {
@@ -312,7 +312,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn symbol(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn symbol(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let symbol_name = player.get_datum(&args[0]);
       let result = if let Datum::Symbol(_) = symbol_name {
@@ -333,7 +333,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn point(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn point(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let x = player.get_datum(&args[0]).int_value()?;
       let y = player.get_datum(&args[1]).int_value()?;
@@ -341,7 +341,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn rect(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn rect(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let first_arg_is_num = player.get_datum(&args[0]).is_number();
       let (left, top, right, bottom) = if args.len() == 4 && first_arg_is_num {
@@ -367,7 +367,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn cursor(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn cursor(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() == 1 {
         let arg = player.get_datum(&args[0]);
@@ -391,7 +391,7 @@ impl TypeHandlers {
     })
   }
 
-  pub async fn new(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub async fn new(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let obj_type = reserve_player_mut(|player| {
       let obj = player.get_datum(&args[0]);
       obj.type_enum()
@@ -428,14 +428,14 @@ impl TypeHandlers {
     Ok(result)
   }
 
-  pub fn timeout(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn timeout(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let name = player.get_datum(&args[0]).string_value()?;
       Ok(player.alloc_datum(Datum::TimeoutRef(name)))
     })
   }
 
-  pub fn rgb(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn rgb(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() == 3 {
         let r = player.get_datum(&args[0]).int_value()? as u8;
@@ -457,20 +457,20 @@ impl TypeHandlers {
     })
   }
 
-  pub fn palette_index(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn palette_index(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let color = player.get_datum(&args[0]).int_value()?;
       Ok(player.alloc_datum(Datum::ColorRef(ColorRef::PaletteIndex(color as u8))))
     })
   }
 
-  pub fn list(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn list(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
-      Ok(player.alloc_datum(Datum::List(DatumType::List, args.clone(), false)))
+      Ok(player.alloc_datum(Datum::List(DatumType::List, args.to_vec(), false)))
     })
   }
 
-  pub fn image(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn image(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let width = player.get_datum(&args[0]).int_value()?;
       let height = player.get_datum(&args[1]).int_value()?;
@@ -494,7 +494,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn abs(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn abs(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(&args[0]);
       let result = match value {
@@ -506,7 +506,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn xtra(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn xtra(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let xtra_name = player.get_datum(&args[0]).string_value()?;
       if is_xtra_registered(&xtra_name) {
@@ -517,7 +517,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn union(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn union(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() != 2 {
         return Err(ScriptError::new("Union requires 2 arguments".to_string()));
@@ -529,7 +529,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn bit_xor(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn bit_xor(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() != 2 {
         return Err(ScriptError::new("Bitwise XOR requires 2 arguments".to_string()));
@@ -541,7 +541,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn power(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn power(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() != 2 {
         return Err(ScriptError::new("Power requires 2 arguments".to_string()));
@@ -564,7 +564,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn add(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn add(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     if args.len() != 2 {
       return Err(ScriptError::new("Add requires 2 arguments".to_string()));
     }
@@ -577,11 +577,11 @@ impl TypeHandlers {
     }
   }
 
-  pub fn nothing(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn nothing(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     Ok(DatumRef::Void)
   }
 
-  pub fn get_a_prop(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_a_prop(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let datum_ref = args.get(0).unwrap();
     let datum_type = reserve_player_mut(|player| {
       player.get_datum(&args[0]).type_enum()
@@ -594,7 +594,7 @@ impl TypeHandlers {
     }
   }
 
-  pub fn min(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn min(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() == 0 {
         return Ok(player.alloc_datum(Datum::Int(0)))
@@ -614,7 +614,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn max(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn max(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() == 0 {
         return Ok(player.alloc_datum(Datum::Int(0)))
@@ -634,11 +634,11 @@ impl TypeHandlers {
     })
   }
 
-  pub fn sort(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
-    ListDatumHandlers::sort(&args[0], &vec![])
+  pub fn sort(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
+    ListDatumHandlers::sort(&args[0], &[])
   }
 
-  pub fn intersect(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn intersect(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       if args.len() != 2 {
         return Err(ScriptError::new("Intersect requires 2 arguments".to_string()));
@@ -650,7 +650,7 @@ impl TypeHandlers {
     })
   }
 
-  pub fn get_prop_at(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_prop_at(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let datum_ref = args.get(0).unwrap();
     let prop_key_ref = args.get(1).unwrap();
     reserve_player_mut(|player| {
@@ -658,34 +658,34 @@ impl TypeHandlers {
     })
   }
 
-  pub fn pi(_: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn pi(_: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       Ok(player.alloc_datum(Datum::Float(std::f32::consts::PI)))
     })
   }
 
-  pub fn sin(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn sin(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(&args[0]).to_float()?;
       Ok(player.alloc_datum(Datum::Float(value.sin())))
     })
   }
 
-  pub fn cos(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn cos(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(&args[0]).to_float()?;
       Ok(player.alloc_datum(Datum::Float(value.cos())))
     })
   }
 
-  pub fn sound(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn sound(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let channel_num = player.get_datum(&args[0]).int_value()? as u16;
       Ok(player.alloc_datum(Datum::SoundRef(channel_num)))
     })
   }
 
-  pub async fn call_ancestor(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub async fn call_ancestor(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let (ref_list, handler_name, args) = reserve_player_mut(|player| {
       let handler_name = player.get_datum(&args[0]).string_value()?;
       let instance_list = player.get_datum(&args[1]).to_list()?.clone();

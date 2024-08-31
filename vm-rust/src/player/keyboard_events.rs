@@ -61,7 +61,7 @@ pub async fn player_key_down(key: String, code: u16) -> Result<DatumRef, ScriptE
             None
         }
     });
-    player_dispatch_targeted_event(&"keyDown".to_string(), &vec![], instance_ids.as_ref());
+    player_dispatch_targeted_event(&"keyDown".to_string(), &[], instance_ids.as_ref());
     Ok(DatumRef::Void)
 }
 
@@ -79,6 +79,6 @@ pub async fn player_key_up(key: String, code: u16) -> Result<DatumRef, ScriptErr
             None
         }
     });
-    player_dispatch_targeted_event(&"keyUp".to_string(), &vec![], instance_ids.as_ref());
+    player_dispatch_targeted_event(&"keyUp".to_string(), &[], instance_ids.as_ref());
     Ok(DatumRef::Void)
 }

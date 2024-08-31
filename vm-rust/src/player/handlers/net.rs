@@ -4,7 +4,7 @@ use crate::{director::lingo::datum::{datum_bool, Datum}, player::{reserve_player
 pub struct NetHandlers { }
 
 impl NetHandlers {
-  pub fn net_done(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn net_done(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let task_id = if let Some(task_id_ref) = &args.get(0) {
         let task_id_datum = player.get_datum(task_id_ref);
@@ -18,7 +18,7 @@ impl NetHandlers {
     })
   }
   
-  pub fn preload_net_thing(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn preload_net_thing(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let url = player.get_datum(&args[0]).string_value()?;
       let task_id = player.net_manager.preload_net_thing(url);
@@ -26,7 +26,7 @@ impl NetHandlers {
     })
   }
 
-  pub fn get_net_text(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_net_text(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let url = player.get_datum(&args[0]).string_value()?;
       let task_id = player.net_manager.preload_net_thing(url);
@@ -35,7 +35,7 @@ impl NetHandlers {
     })
   }
 
-  pub fn get_stream_status(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_stream_status(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let (state, error, url, is_ok) = {
         let task_id = player.get_datum(&args[0]).int_value()? as u32;
@@ -62,7 +62,7 @@ impl NetHandlers {
     })
   }
 
-  pub fn net_error(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn net_error(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let task_id = args.get(0).map(|datum_ref| player.get_datum(datum_ref).int_value().unwrap() as u32);
       let task_state = player.net_manager.get_task_state(task_id).unwrap();
@@ -78,7 +78,7 @@ impl NetHandlers {
     })
   }
 
-  pub fn net_text_result(args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn net_text_result(args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let task_id = args.get(0).map(|datum_ref| player.get_datum(datum_ref).int_value().unwrap() as u32);
       let task_state = player.net_manager.get_task_state(task_id).unwrap();

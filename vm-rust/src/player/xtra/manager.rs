@@ -13,7 +13,7 @@ pub fn call_xtra_instance_handler(
     xtra_name: &String,
     instance_id: XtraInstanceId,
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
 ) -> Result<DatumRef, ScriptError> {
     match xtra_name.as_str() {
         "Multiuser" => {
@@ -30,7 +30,7 @@ pub async fn call_xtra_instance_async_handler(
     xtra_name: &String,
     instance_id: XtraInstanceId,
     handler_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
 ) -> Result<DatumRef, ScriptError> {
     match xtra_name.as_str() {
         "Multiuser" => {
@@ -61,7 +61,7 @@ pub fn has_xtra_instance_async_handler(
 
 pub fn create_xtra_instance(
     xtra_name: &String,
-    args: &Vec<DatumRef>,
+    args: &[DatumRef],
 ) -> Result<XtraInstanceId, ScriptError> {
     match xtra_name.as_str() {
         "Multiuser" => Ok(borrow_multiuser_manager_mut(|x| x.create_instance(args))),

@@ -86,7 +86,7 @@ impl ScriptInstanceDatumHandlers {
     });
   }
 
-  pub async fn call_async(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub async fn call_async(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     let (instance_id, handler_ref) = reserve_player_ref(|player| {
       let handler_ref = ScriptInstanceUtils::get_handler(handler_name, datum, player);
       let datum = player.get_datum(datum);
@@ -105,7 +105,7 @@ impl ScriptInstanceDatumHandlers {
     }
   }
 
-  fn get_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn get_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let key = player.get_datum(&args[0]).string_value()?;
       match key.as_str() {
@@ -119,7 +119,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  fn set_at(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn set_at(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let key = player.get_datum(&args[0]).string_value()?;
       let value_ref = &args[1];
@@ -129,7 +129,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn set_a_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_a_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_name = player.get_datum(&args[0]).string_value()?;
       let value_ref = &args[1];
@@ -142,7 +142,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn get_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let list_prop_name_ref = &args[1];
 
@@ -158,7 +158,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn set_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn set_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let list_prop_name_ref = &args[1];
       let value_ref = &args[2];
@@ -176,7 +176,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn handler(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn handler(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let name = player.get_datum(&args[0]).string_value()?;
       let (_, script) = ScriptInstanceUtils::get_script(datum, player)?;
@@ -185,7 +185,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn count(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn count(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let instance_ref = match player.get_datum(datum) {
         Datum::ScriptInstanceRef(instance_ref) => instance_ref.clone(),
@@ -203,7 +203,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn get_a_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_a_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_name = player.get_datum(&args[0]).string_value()?;
       let instance_ref = match player.get_datum(datum) {
@@ -215,7 +215,7 @@ impl ScriptInstanceDatumHandlers {
     })
   }
 
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "setAt" => Self::set_at(datum, args),
       "handler" => Self::handler(datum, args),

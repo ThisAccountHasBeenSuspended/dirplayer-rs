@@ -33,7 +33,7 @@ impl StringDatumUtils {
 }
 
 impl StringDatumHandlers {
-  pub fn count(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn count(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let value = player.get_datum(datum).string_value()?;
       let operand = player.get_datum(&args[0]).string_value()?;
@@ -43,7 +43,7 @@ impl StringDatumHandlers {
     })
   }
 
-  pub fn get_chunk_prop_ref(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_chunk_prop_ref(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_name = player.get_datum(&args[0]).string_value()?;
       let start = player.get_datum(&args[1]).int_value()?;
@@ -54,7 +54,7 @@ impl StringDatumHandlers {
     })
   }
 
-  pub fn get_chunk_prop(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn get_chunk_prop(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let prop_name = player.get_datum(&args[0]).string_value()?;
       let start = player.get_datum(&args[1]).int_value()?;
@@ -65,7 +65,7 @@ impl StringDatumHandlers {
     })
   }
 
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "count" => Self::count(datum, args),
       "getPropRef" => Self::get_chunk_prop_ref(datum, args),

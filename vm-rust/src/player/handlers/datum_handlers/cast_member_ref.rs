@@ -34,7 +34,7 @@ impl CastMemberRefHandlers {
     }
   }
 
-  pub fn call(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  pub fn call(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     match handler_name.as_str() {
       "duplicate" => Self::duplicate(datum, args),
       "erase" => Self::erase(datum, args),
@@ -82,7 +82,7 @@ impl CastMemberRefHandlers {
     }
   }
 
-  fn call_member_type(datum: &DatumRef, handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn call_member_type(datum: &DatumRef, handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let member_ref = match player.get_datum(datum) {
         Datum::CastMember(cast_member_ref) => cast_member_ref.to_owned(),
@@ -101,7 +101,7 @@ impl CastMemberRefHandlers {
     })
   }
 
-  fn erase(datum: &DatumRef, _: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn erase(datum: &DatumRef, _: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let cast_member_ref = match player.get_datum(datum) {
         Datum::CastMember(cast_member_ref) => cast_member_ref.to_owned(),
@@ -112,7 +112,7 @@ impl CastMemberRefHandlers {
     })
   }
 
-  fn duplicate(datum: &DatumRef, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+  fn duplicate(datum: &DatumRef, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
     reserve_player_mut(|player| {
       let cast_member_ref = match player.get_datum(datum) {
         Datum::CastMember(cast_member_ref) => cast_member_ref.to_owned(),

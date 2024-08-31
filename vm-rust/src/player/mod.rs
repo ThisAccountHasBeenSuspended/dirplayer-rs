@@ -209,7 +209,7 @@ impl DirPlayer {
     self.is_script_paused = false;
     // TODO runVM()
     async_std::task::spawn_local(async move {
-      if let Err(err) = player_invoke_global_event(&"prepareMovie".to_string(), &vec![]).await {
+      if let Err(err) = player_invoke_global_event(&"prepareMovie".to_string(), &[]).await {
         reserve_player_mut(|player| player.on_script_error(&err));
         return;
       }
@@ -505,7 +505,7 @@ pub fn player_handle_scope_return(scope: &ScopeResult) {
   }
 }
 
-async fn player_call_global_handler(handler_name: &String, args: &Vec<DatumRef>) -> Result<DatumRef, ScriptError> {
+async fn player_call_global_handler(handler_name: &String, args: &[DatumRef]) -> Result<DatumRef, ScriptError> {
   let receiver_handlers: Vec<ScriptHandlerRef> = unsafe {
     // let player_opt = PLAYER_LOCK.try_read().unwrap();
     let player = PLAYER_OPT.as_ref().unwrap();
@@ -565,7 +565,7 @@ pub enum ScriptReceiver {
 pub async fn player_call_script_handler(
   receiver: Option<ScriptInstanceRef>, 
   handler_ref: ScriptHandlerRef,
-  arg_list: &Vec<DatumRef>,
+  arg_list: &[DatumRef],
 ) -> Result<ScopeResult, ScriptError> {
   player_call_script_handler_raw_args(receiver, handler_ref, arg_list, false).await
 }
@@ -573,7 +573,7 @@ pub async fn player_call_script_handler(
 pub async fn player_call_script_handler_raw_args(
   receiver: Option<ScriptInstanceRef>, 
   handler_ref: ScriptHandlerRef,
-  arg_list: &Vec<DatumRef>,
+  arg_list: &[DatumRef],
   use_raw_arg_list: bool,
 ) -> Result<ScopeResult, ScriptError> {
   let (script_member_ref, handler_name) = &handler_ref;
@@ -704,8 +704,8 @@ pub async fn run_frame_loop() {
   while is_playing {
     if !is_script_paused {
       player_wait_available().await;
-      player_unwrap_result(player_invoke_global_event(&"prepareFrame".to_string(), &vec![]).await);
-      player_unwrap_result(player_invoke_global_event(&"enterFrame".to_string(), &vec![]).await);
+      player_unwrap_result(player_invoke_global_event(&"prepareFrame".to_string(), &[]).await);
+      player_unwrap_result(player_invoke_global_event(&"enterFrame".to_string(), &[]).await);
     }
     timeout(Duration::from_millis(1000 / fps as u64), future::pending::<()>()).await.unwrap_err();
     player_wait_available().await;
@@ -745,7 +745,7 @@ pub async fn run_frame_loop() {
       });
       if !frame_skipped {
         // TODO only call this after timeout completes
-        player_unwrap_result(player_invoke_global_event(&"exitFrame".to_string(), &vec![]).await);
+        player_unwrap_result(player_invoke_global_event(&"exitFrame".to_string(), &[]).await);
         (is_playing, is_script_paused) = reserve_player_mut(|player| {
           (player.is_playing, player.is_script_paused)
         });
@@ -866,7 +866,7 @@ fn get_active_static_script_refs<'a>(
 //   return active_scripts;
 // }
 
-async fn player_ext_call<'a>(name: String, args: &Vec<DatumRef>, scope_ref: ScopeRef) -> HandlerExecutionResult {
+async fn player_ext_call<'a>(name: String, args: &[DatumRef], scope_ref: ScopeRef) -> HandlerExecutionResult {
   // let formatted_args: Vec<String> = reserve_player_ref(|player| {
   //   args.iter().map(|datum_ref| format_datum(*datum_ref, player)).collect()
   // });

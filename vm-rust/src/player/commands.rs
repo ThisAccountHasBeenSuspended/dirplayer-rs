@@ -302,7 +302,7 @@ pub async fn run_player_command(command: PlayerVMCommand) -> Result<DatumRef, Sc
             });
             player_dispatch_targeted_event(
                 &"mouseDown".to_string(),
-                &vec![],
+                &[],
                 instance_ids.as_ref(),
             );
             return Ok(DatumRef::Void);
@@ -329,7 +329,7 @@ pub async fn run_player_command(command: PlayerVMCommand) -> Result<DatumRef, Sc
             let is_inside = result.as_ref().map(|x| x.1).unwrap_or(true);
             let instance_ids = result.as_ref().map(|x| &x.0);
             let event_name = if is_inside { "mouseUp" } else { "mouseUpOutSide" };
-            player_dispatch_targeted_event(&event_name.to_string(), &vec![], instance_ids);
+            player_dispatch_targeted_event(&event_name.to_string(), &[], instance_ids);
             reserve_player_mut(|player| {
                 player.is_double_click = false;
             });
@@ -353,11 +353,11 @@ pub async fn run_player_command(command: PlayerVMCommand) -> Result<DatumRef, Sc
                 let hovered_sprite = hovered_sprite.unwrap_or(-1);
                 if hovered_sprite != sprite_num as i16 {
                     if hovered_sprite != -1 {
-                        player_dispatch_event_to_sprite(&"mouseLeave".to_string(), &vec![], hovered_sprite as u16)
+                        player_dispatch_event_to_sprite(&"mouseLeave".to_string(), &[], hovered_sprite as u16)
                     }
-                    player_dispatch_event_to_sprite(&"mouseEnter".to_string(), &vec![], sprite_num as u16);
+                    player_dispatch_event_to_sprite(&"mouseEnter".to_string(), &[], sprite_num as u16);
                 } else {
-                    player_dispatch_event_to_sprite(&"mouseWithin".to_string(), &vec![], sprite_num as u16);
+                    player_dispatch_event_to_sprite(&"mouseWithin".to_string(), &[], sprite_num as u16);
                 }
             }
         }

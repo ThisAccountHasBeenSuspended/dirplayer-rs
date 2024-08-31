@@ -33,7 +33,7 @@ impl CastListChunk {
     reader: &mut BinaryReader, 
     dir_version: u16, 
     header: CastListChunkHeader, 
-    offset_table: &Vec<usize>,
+    offset_table: &[usize],
     item_endian: Endian,
   ) -> Result<Vec<CastListEntry>, String> {
     let item_bufs = BasicListChunk::read_items(

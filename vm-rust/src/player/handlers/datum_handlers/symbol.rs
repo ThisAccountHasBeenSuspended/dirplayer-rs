@@ -10,7 +10,7 @@ impl SymbolDatumHandlers {
     pub fn call(
         datum: DatumRef,
         handler_name: &String,
-        args: &Vec<DatumRef>,
+        args: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         match handler_name.as_str() {
             _ => Err(ScriptError::new(format!(

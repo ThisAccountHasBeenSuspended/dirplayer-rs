@@ -106,10 +106,10 @@ pub fn make_chunk(
   endian: Endian,
   rifx: &mut RIFXReaderContext,
   fourcc: u32, 
-  view: &Vec<u8>,
+  view: &[u8],
 ) -> Result<Chunk, String> {
   let version = rifx.dir_version;
-  let mut chunk_reader = BinaryReader::from_vec(view);
+  let mut chunk_reader = BinaryReader::from_u8(view);
   chunk_reader.set_endian(endian);
 
   match fourcc_to_string(fourcc).as_str() {

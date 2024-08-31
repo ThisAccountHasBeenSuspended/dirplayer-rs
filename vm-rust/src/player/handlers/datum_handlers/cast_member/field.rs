@@ -16,7 +16,7 @@ impl FieldMemberHandlers {
         player: &mut DirPlayer,
         datum: &DatumRef,
         handler_name: &String,
-        args: &Vec<DatumRef>,
+        args: &[DatumRef],
     ) -> Result<DatumRef, ScriptError> {
         let member_ref = player.get_datum(datum).to_member_ref()?;
         let member = player

@@ -27,7 +27,7 @@ use self::{bitmap::BitmapDatumHandlers, list_handlers::ListDatumHandlers, point:
 pub async fn player_call_datum_handler(
   obj_ref: &DatumRef,
   handler_name: &String,
-  args: &Vec<DatumRef>
+  args: &[DatumRef]
 ) -> Result<DatumRef, ScriptError> {
   let datum_type = reserve_player_ref(|player| {
     player.get_datum(obj_ref).type_enum()
