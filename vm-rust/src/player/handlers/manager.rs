@@ -47,7 +47,7 @@ impl BuiltInHandlerManager {
       let mut i = 0;
       for arg in args {
         if i > 0 {
-          line.push_str(" ");
+          line.push(' ');
         }
         let arg = player.get_datum(arg);
         line.push_str(&format_concrete_datum(&arg, player));
